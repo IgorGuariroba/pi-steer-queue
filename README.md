@@ -2,6 +2,8 @@
 
 Type your next instruction while [pi](https://pi.dev) is still working, see it in a box, and choose how it reaches the agent:
 
+![pi-steer-queue](https://raw.githubusercontent.com/IgorGuariroba/pi-steer-queue/main/docs/images/cover.png)
+
 | You press | What happens |
 |---|---|
 | **Enter** (with text) | The instruction is added to the **steer queue** box. The current run is not affected. |
@@ -10,13 +12,17 @@ Type your next instruction while [pi](https://pi.dev) is still working, see it i
 | **↑ / ↓** (empty editor) | Select a queued instruction and edit it. **Enter** saves; an empty text removes the item. **Esc** cancels the edit. |
 | **Alt+↑** | Moves the queued instructions back into the editor. |
 
-```
-┌─ steer queue ──────────────────────────────────────────┐
-│ ○ meu mr está aprovado? · steering                     │
-│ ○ depois roda os testes                                │
-│ enter interrupt and send · ↑ select/edit · esc cancel  │
-└────────────────────────────────────────────────────────┘
-```
+**Queued**: the instruction waits in the box while the run continues.
+
+![queued instruction](https://raw.githubusercontent.com/IgorGuariroba/pi-steer-queue/main/docs/images/queue.png)
+
+**Steering**: after an empty Enter, the instruction is delivered when the current command finishes.
+
+![steering instruction](https://raw.githubusercontent.com/IgorGuariroba/pi-steer-queue/main/docs/images/steering.png)
+
+**Several queued**: each one becomes the next prompt, in order, when a run ends normally.
+
+![several queued instructions](https://raw.githubusercontent.com/IgorGuariroba/pi-steer-queue/main/docs/images/queued.png)
 
 - If you never promote an instruction, it stays in the queue. When the run ends normally, it becomes the next prompt. Several instructions are consumed one at a time, in order.
 - After you stop the run with **Esc**, the queue pauses. Instructions stay in the box until you press Enter on an empty editor (sends the first one now) or until a later run ends normally.

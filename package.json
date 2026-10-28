@@ -26,7 +26,8 @@
   "pi": {
     "extensions": [
       "./extensions/steer-queue.ts"
-    ]
+    ],
+    "image": "https://raw.githubusercontent.com/IgorGuariroba/pi-steer-queue/main/docs/images/cover.png"
   },
   "scripts": {
     "test": "vitest run",
