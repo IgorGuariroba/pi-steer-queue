@@ -11,11 +11,11 @@ Type your next instruction while [pi](https://pi.dev) is still working, see it i
 | **Alt+↑** | Moves the queued instructions back into the editor. |
 
 ```
-┌─ steer queue ──────────────────────────────────────┐
-│ ○ meu mr está aprovado? · steering                 │
-│ ○ depois roda os testes                            │
-│ enter interrupt and send · ↑ select/edit · esc cancel │
-└────────────────────────────────────────────────────┘
+┌─ steer queue ──────────────────────────────────────────┐
+│ ○ meu mr está aprovado? · steering                     │
+│ ○ depois roda os testes                                │
+│ enter interrupt and send · ↑ select/edit · esc cancel  │
+└────────────────────────────────────────────────────────┘
 ```
 
 - If you never promote an instruction, it stays in the queue. When the run ends normally, it becomes the next prompt. Several instructions are consumed one at a time, in order.
