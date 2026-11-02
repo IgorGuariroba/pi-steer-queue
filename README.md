@@ -50,6 +50,14 @@ npm run typecheck
 pi -e ./extensions/steer-queue.ts
 ```
 
+After cloning, enable the local Git hooks that block direct commits and pushes to `main`/`master`:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+Protected branches default to `main master`; override with `git config hooks.protectedBranches "main release"`. Bypass on purpose with `ALLOW_MAIN=1` (or `--no-verify`).
+
 ## License
 
 MIT
