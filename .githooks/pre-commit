@@ -1,0 +1,25 @@
+#!/bin/sh
+# Bloqueia commit direto em branches protegidas.
+# Protegidas: `git config hooks.protectedBranches` (espaço/vírgula), padrão "main master".
+# Bypass: ALLOW_MAIN=1 git commit ...   (ou git commit --no-verify)
+
+[ "${ALLOW_MAIN:-}" = "1" ] && exit 0
+
+branch=$(git symbolic-ref --short -q HEAD) || exit 0 # detached HEAD: deixa passar
+
+protected=$(git config --get-all hooks.protectedBranches | tr ',\n' '  ')
+[ -n "$(printf '%s' "$protected" | tr -d ' ')" ] || protected="main master"
+
+for p in $protected; do
+	if [ "$branch" = "$p" ]; then
+		cat >&2 <<EOF
+✖ Commit bloqueado: a branch '$branch' é protegida.
+  Crie uma branch de trabalho e faça o commit nela:
+    git switch -c feat/<nome>
+  Bypass consciente: ALLOW_MAIN=1 git commit ...
+EOF
+		exit 1
+	fi
+done
+
+exit 0
