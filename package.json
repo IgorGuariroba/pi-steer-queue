@@ -1,6 +1,6 @@
 {
   "name": "pi-steer-queue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Type ahead while pi works: Enter queues, Enter again steers at the next safe point, Enter once more interrupts and sends now.",
   "license": "MIT",
   "type": "module",
