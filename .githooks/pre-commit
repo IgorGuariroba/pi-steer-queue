@@ -22,4 +22,43 @@ EOF
 	fi
 done
 
+# --- repo-harden: higiene do conteúdo staged ---
+# Bloqueia marcadores de conflito e arquivos novos acima de `git config hooks.maxFileKB` (padrão 500; Git LFS ignorado).
+check_merge_conflict() {
+	hits=$(git diff --cached -U0 --no-color --diff-filter=ACMR | grep -nE '^\+(<{7}|>{7})( |$)' | head -5)
+	[ -z "$hits" ] && return 0
+	echo "✖ Marcadores de conflito não resolvidos no staged:" >&2
+	printf '%s\n' "$hits" | sed 's/^/   /' >&2
+	return 1
+}
+
+check_added_large_files() {
+	max_kb=$(git config --get hooks.maxFileKB); max_kb=${max_kb:-500}
+	big=$(git diff --cached --name-only --diff-filter=A -z | xargs -0 -I{} sh -c '
+		[ "$(git check-attr filter -- "$1" | sed "s/.*: //")" = lfs ] && exit 0
+		kb=$(( ($(git cat-file -s ":$1") + 1023) / 1024 ))
+		[ "$kb" -gt "$2" ] && echo "$1 (${kb} KB)"
+		exit 0' sh {} "$max_kb")
+	[ -z "$big" ] && return 0
+	{
+		echo "✖ Arquivos novos acima de ${max_kb} KB (git config hooks.maxFileKB):"
+		printf '%s\n' "$big" | sed 's/^/   /'
+		echo "  Use Git LFS, ou aumente o limite se eles devem ir para o git."
+	} >&2
+	return 1
+}
+
+check_merge_conflict || exit 1
+check_added_large_files || exit 1
+
+# --- repo-harden: secret scan (gitleaks) nas mudanças staged ---
+if command -v gitleaks >/dev/null 2>&1; then
+	gitleaks git --staged --redact --no-banner -l warn || {
+		echo "✖ gitleaks encontrou possíveis segredos no staged. Remova-os (falso positivo: .gitleaksignore)." >&2
+		exit 1
+	}
+else
+	echo "⚠ gitleaks não instalado: secret scan local pulado (instale: https://github.com/gitleaks/gitleaks)." >&2
+fi
+
 exit 0

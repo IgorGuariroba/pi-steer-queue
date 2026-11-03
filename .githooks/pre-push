@@ -24,4 +24,12 @@ EOF
 	done
 done
 
-exit $status
+[ $status -eq 0 ] || exit $status
+
+# --- repo-harden: typecheck + testes (os mesmos comandos do CI) ---
+if [ -f package.json ]; then
+	npm run --silent typecheck || { echo "✖ typecheck falhou (bypass: git push --no-verify)" >&2; exit 1; }
+	npm test --silent || { echo "✖ testes falharam (bypass: git push --no-verify)" >&2; exit 1; }
+fi
+
+exit 0

@@ -50,13 +50,16 @@ npm run typecheck
 pi -e ./extensions/steer-queue.ts
 ```
 
-After cloning, enable the local Git hooks that block direct commits and pushes to `main`/`master`:
+After cloning, `npm install` enables the local Git hooks (via the `prepare` script). To enable them by hand:
 
 ```bash
 git config core.hooksPath .githooks
 ```
 
-Protected branches default to `main master`; override with `git config hooks.protectedBranches "main release"`. Bypass on purpose with `ALLOW_MAIN=1` (or `--no-verify`).
+- `pre-commit`: blocks commits on `main`/`master`, unresolved conflict markers, new files above 500 KB (`git config hooks.maxFileKB <n>`; Git LFS files skipped) and secrets in staged changes (`gitleaks`, when installed).
+- `pre-push`: blocks pushes to `main`/`master`, then runs `npm run typecheck` and `npm test`.
+
+Protected branches default to `main master`; override with `git config hooks.protectedBranches "main release"`. Bypass on purpose with `ALLOW_MAIN=1` (or `--no-verify`, which skips every check). Disable the hooks with `git config --unset core.hooksPath`.
 
 ## License
 
