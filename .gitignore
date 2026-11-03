@@ -1,1 +1,14 @@
 node_modules/
+
+# repo-harden
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.npm/
+*.log
+.env
+.env.*
+!.env.example
+*.pem
+*.key
